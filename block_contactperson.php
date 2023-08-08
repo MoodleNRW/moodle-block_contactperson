@@ -55,16 +55,41 @@ class block_contactperson extends block_base {
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
-            $text = '<img src="https://moodlenrw.de/draftfile.php/22/user/draft/696634506/zahnraeder.png" alt="" width="40" height="44" role="presentation" class="img-fluid atto_image_button_left"><span><strong>Kontakt:&nbsp;<br></strong><a href="https://moodlenrw.de/course/view.php?id=70" target="_blank">Michail Lewintan</a><br></span>
-            <div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span><a href="mailto: eassessment@moodlenrw.de">Moodle.NRW | RUB</a></span><br></div>
-            <div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://moodlenrw.de/course/view.php?id=5" target="_blank">Annika Sauer</a><br></div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span><a href="mailto: support@moodlenrw.de">Moodle.NRW | BUW</a></span><br>';
+            $usedcontactperson1 = $this->config->{'usedcontactperson1'};
+            $usedcontactperson2 = $this->config->{'usedcontactperson2'};
+            $usedcontactperson3 = $this->config->{'usedcontactperson3'};
+            $text = '
+            <img src="https://moodlenrw.de/draftfile.php/22/user/draft/696634506/zahnraeder.png" alt="" width="40" height="44" role="presentation" class="img-fluid atto_image_button_left">
+            <span><strong>Kontakt:&nbsp;<br></strong>' . 
+            $this->get_html_for_contactperson($usedcontactperson1) .
+            $this->get_html_for_contactperson($usedcontactperson2) .
+            $this->get_html_for_contactperson($usedcontactperson3);
             $this->content->text = $text;
         }
 
         return $this->content;
     }
 
+    private function get_html_for_contactperson($usedcontactperson) {
+        $htmloutput = "";
+        if (!str_contains($usedcontactperson, 'empty')) {
+            $config = get_config('block_contactperson');
+            $courselink = "bla";
+            $fieldofaction = "Moodle.NRW | RUB";
+            $email = "eassessment@moodlenrw.de";
+            $htmloutput = "<a href='{$courselink}' target='_blank'>{$usedcontactperson}</a><br></span>". 
+            '<div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'.
+             "<span><a href='mailto: {$email}'>{$fieldofaction}</a></span>".
+             '<br></div><div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
+        }
+        return $htmloutput;
+    }
+
     function has_config() {
+        return true;
+    }
+
+    public function instance_allow_config() {
         return true;
     }
 

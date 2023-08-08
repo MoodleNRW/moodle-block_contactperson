@@ -75,12 +75,12 @@ if ($hassiteconfig) {
 
             // Option for the Email 
             $settings->add(new admin_setting_configtext(
-                'block_contactperson/emnail'.$i,
+                'block_contactperson/email'.$i,
                 get_string('email', 'block_contactperson', array('no' => $i), null, true),
                 "",
                 ""
             ));
-            $settings->hide_if('block_contactperson/emnail'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            $settings->hide_if('block_contactperson/email'.$i, 'block_contactperson/personenabled'.$i, 'neq',
             'yes');
 
             // Option for the fieldofacrion

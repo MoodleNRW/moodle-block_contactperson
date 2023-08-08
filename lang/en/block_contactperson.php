@@ -35,4 +35,6 @@ $string['additionalhtml'] = 'Additional Html';
 $string['personenabled'] = 'Kontaktperson vorhanden';
 $string['yes'] = 'Ja';
 $string['no'] = 'Nein';
+$string['dropdowncontactperson'] = "Auswahl Kontaktperson";
+$string['nopersonassigned'] = "Keine Person ausgewählt";
 

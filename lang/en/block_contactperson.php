@@ -26,3 +26,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Contactperson';
+$string['name'] = 'Kontaktperson';
+$string['contactpersonlink'] = 'Link zum Kontaktprofil';
+$string['fieldofaction'] = 'Handlungsfeld';
+$string['email'] = 'E-Mail';
+$string['fieldofacrion'] = 'Handlungsfeld';
+$string['additionalhtml'] = 'Additional Html';
+$string['personenabled'] = 'Kontaktperson vorhanden';
+$string['yes'] = 'Ja';
+$string['no'] = 'Nein';
+

@@ -23,12 +23,77 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+// Constants which are use throughout this theme.
+define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
+define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
 
 if ($hassiteconfig) {
-    $settings = new admin_settingpage('block_contactperson', new lang_string('pluginname', 'block_contactperson'));
+    // $ADMIN->add('localplugins', new admin_category('block_contactperson', new lang_string('pluginname', 'block_contactperson')));
+    // $settingspage = new admin_settingpage('block_contactperson', new lang_string('pluginname', 'block_contactperson'));
 
-    // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define actual plugin settings page and add it to the tree - {@link https://docs.moodle.org/dev/Admin_settings}.
-    }
+        $settings->add(new admin_setting_confightmleditor(
+            'block_contactperson/additionalhtml',
+            get_string('additionalhtml', 'block_contactperson', array('no' => $i), null, true),
+            "",
+            ""
+        ));
+
+        //Option for enabling Contactperson
+        $optionspersonenabled = array( BLOCK_CONTACTPERSON_SETTING_SELECT_YES =>   get_string('yes', 'block_contactperson', array('no' => $i),null,true),
+        BLOCK_CONTACTPERSON_SETTING_SELECT_NO =>   get_string('no', 'block_contactperson', array('no' => $i),null,true)
+        );
+
+        for ($i = 1; $i <= 15; $i++) {
+            $settings->add(new admin_setting_configselect(
+                'block_contactperson/personenabled'.$i,
+                get_string('personenabled', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                BLOCK_CONTACTPERSON_SETTING_SELECT_NO,
+                $optionspersonenabled
+            ));
+
+            // Option for the Name 
+            $settings->add(new admin_setting_configtext(
+                'block_contactperson/name'.$i,
+                get_string('name', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                ""
+            ));
+            $settings->hide_if('block_contactperson/name'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            'yes');
+
+            // Option for the Contactpersonlink
+            $settings->add(new admin_setting_configtext(
+                'block_contactperson/contactpersonlink'.$i,
+                get_string('contactpersonlink', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                ""
+            ));
+            $settings->hide_if('block_contactperson/contactpersonlink'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            'yes');
+
+            // Option for the Email 
+            $settings->add(new admin_setting_configtext(
+                'block_contactperson/emnail'.$i,
+                get_string('email', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                ""
+            ));
+            $settings->hide_if('block_contactperson/emnail'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            'yes');
+
+            // Option for the fieldofacrion
+            $settings->add(new admin_setting_configtext(
+                'block_contactperson/fieldofaction'.$i,
+                get_string('fieldofaction', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                ""
+            ));
+            $settings->hide_if('block_contactperson/fieldofaction'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            'yes');
+        }
+     }
+
+    // $ADMIN->add('localplugins', $settings);
 }

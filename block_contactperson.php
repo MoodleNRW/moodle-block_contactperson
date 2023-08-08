@@ -55,11 +55,17 @@ class block_contactperson extends block_base {
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
-            $text = 'Basti';
+            $text = '<img src="https://moodlenrw.de/draftfile.php/22/user/draft/696634506/zahnraeder.png" alt="" width="40" height="44" role="presentation" class="img-fluid atto_image_button_left"><span><strong>Kontakt:&nbsp;<br></strong><a href="https://moodlenrw.de/course/view.php?id=70" target="_blank">Michail Lewintan</a><br></span>
+            <div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span><a href="mailto: eassessment@moodlenrw.de">Moodle.NRW | RUB</a></span><br></div>
+            <div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://moodlenrw.de/course/view.php?id=5" target="_blank">Annika Sauer</a><br></div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span><a href="mailto: support@moodlenrw.de">Moodle.NRW | BUW</a></span><br>';
             $this->content->text = $text;
         }
 
         return $this->content;
+    }
+
+    function has_config() {
+        return true;
     }
 
     /**

@@ -37,7 +37,6 @@ class block_contactperson extends block_base {
      * @return stdClass The block contents.
      */
     public function get_content() {
-
         if ($this->content !== null) {
             return $this->content;
         }
@@ -55,35 +54,74 @@ class block_contactperson extends block_base {
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
-            $usedcontactperson1 = $this->config->{'usedcontactperson1'};
+            $usedcontactperson1 = $this->config->{'usedcontactperson1'};           
             $usedcontactperson2 = $this->config->{'usedcontactperson2'};
             $usedcontactperson3 = $this->config->{'usedcontactperson3'};
-            $text = '
-            <img src="https://moodlenrw.de/draftfile.php/22/user/draft/696634506/zahnraeder.png" alt="" width="40" height="44" role="presentation" class="img-fluid atto_image_button_left">
-            <span><strong>Kontakt:&nbsp;<br></strong>' . 
-            $this->get_html_for_contactperson($usedcontactperson1) .
-            $this->get_html_for_contactperson($usedcontactperson2) .
-            $this->get_html_for_contactperson($usedcontactperson3);
+            $text = 
+            $this->get_html_for_contactperson($usedcontactperson1, $usedcontactperson2 == 'empty') .
+            $this->get_html_for_contactperson($usedcontactperson2, $usedcontactperson3 == 'empty') .
+            $this->get_html_for_contactperson($usedcontactperson3, true);
             $this->content->text = $text;
         }
 
         return $this->content;
     }
 
-    private function get_html_for_contactperson($usedcontactperson) {
+    private function get_html_for_contactperson($usedcontactperson, $last = false) {
+        global $DB, $OUTPUT;
         $htmloutput = "";
         if (!str_contains($usedcontactperson, 'empty')) {
             $config = get_config('block_contactperson');
-            $courselink = "bla";
-            $fieldofaction = "Moodle.NRW | RUB";
-            $email = "eassessment@moodlenrw.de";
+            $propertykey = $this->get_index_from_config($config,$usedcontactperson);
+            if($propertykey) {
+                // Extrahiere die Zahl am Ende des Schlüssels
+                $key = substr($propertykey, -1 * (strlen($propertykey) - strlen('name')));
+                
+                $contactpersonlink = $config->{'contactpersonlink'.$key};
+                $email = $config->{'email'.$key};
+                $fieldofaction = $config->{'fieldofaction'.$key};
+                $userid = $config->{'userid'.$key};
+                $userpicturehtml = "";
+
+                $user = core_user::get_user($userid);
+                if ($user) {
+                    $userpicture = $OUTPUT->user_picture($user); 
+                    $userpicturehtml =  $userpicture; 
+                }
+
+                $borderstyle= "";
+                
+                if (!$last){
+                    $borderstyle= "border-bottom: #dee2e6 1px solid;";
+                }
+                 
+                $htmloutput = 
+                "<div class='container d-flex align-items-center' style='{$borderstyle}'>".
+                '   <div class="row w-100 pt-3 pb-3">
+                        <div class="">'.
+                            $userpicturehtml.
+                '       </div>           
+                        <div class="d-flex flex-column justify-content-between">'.
+                "           <a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a>".
+                "           <a href='mailto: {$email}'>{$fieldofaction}</a>".
+                '       </div>
+                    </div>
+                </div>';
+                // "<a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a><br></span>". 
+                // '<div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'.
+                //  "<span><a href='mailto: {$email}'>{$fieldofaction}</a></span>".
+                //  $userpicturehtml.
+                //  '<br></div><div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
+            }
             
-            $htmloutput = "<a href='{$courselink}' target='_blank'>{$usedcontactperson}</a><br></span>". 
-            '<div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'.
-             "<span><a href='mailto: {$email}'>{$fieldofaction}</a></span>".
-             '<br></div><div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
         }
         return $htmloutput;
+    }
+
+    private function get_index_from_config($config,$usedcontactperson) {
+        $properties = get_object_vars($config);
+        $key = array_search($usedcontactperson, $properties);
+        return $key;
     }
 
     function has_config() {

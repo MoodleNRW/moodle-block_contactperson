@@ -83,6 +83,16 @@ if ($hassiteconfig) {
             $settings->hide_if('block_contactperson/email'.$i, 'block_contactperson/personenabled'.$i, 'neq',
             'yes');
 
+            // Option for UserId
+            $settings->add(new admin_setting_configtext(
+                'block_contactperson/userid'.$i,
+                get_string('userid', 'block_contactperson', array('no' => $i), null, true),
+                "",
+                ""
+            ));
+            $settings->hide_if('block_contactperson/userid'.$i, 'block_contactperson/personenabled'.$i, 'neq',
+            'yes');
+
             // Option for the fieldofacrion
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/fieldofaction'.$i,

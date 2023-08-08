@@ -77,6 +77,7 @@ class block_contactperson extends block_base {
             $courselink = "bla";
             $fieldofaction = "Moodle.NRW | RUB";
             $email = "eassessment@moodlenrw.de";
+            
             $htmloutput = "<a href='{$courselink}' target='_blank'>{$usedcontactperson}</a><br></span>". 
             '<div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'.
              "<span><a href='mailto: {$email}'>{$fieldofaction}</a></span>".

@@ -58,16 +58,16 @@ class block_contactperson extends block_base {
             $usedcontactperson2 = $this->config->{'usedcontactperson2'};
             $usedcontactperson3 = $this->config->{'usedcontactperson3'};
             $text = 
-            $this->get_html_for_contactperson($usedcontactperson1, $usedcontactperson2 == 'empty') .
-            $this->get_html_for_contactperson($usedcontactperson2, $usedcontactperson3 == 'empty') .
-            $this->get_html_for_contactperson($usedcontactperson3, true);
+            $this->get_html_for_contactperson($usedcontactperson1, true, $usedcontactperson2 == 'empty') .
+            $this->get_html_for_contactperson($usedcontactperson2, false, $usedcontactperson3 == 'empty') .
+            $this->get_html_for_contactperson($usedcontactperson3, false, true);
             $this->content->text = $text;
         }
 
         return $this->content;
     }
 
-    private function get_html_for_contactperson($usedcontactperson, $last = false) {
+    private function get_html_for_contactperson($usedcontactperson,$first = false, $last = false) {
         global $DB, $OUTPUT;
         $htmloutput = "";
         if (!str_contains($usedcontactperson, 'empty')) {
@@ -89,16 +89,17 @@ class block_contactperson extends block_base {
                     $userpicturehtml =  $userpicture; 
                 }
 
-                $borderstyle= "";
-                
+                $borderstyle = "";
+                $paddingtop = $first ? "" : "pt-3";
+
                 if (!$last){
                     $borderstyle= "border-bottom: #dee2e6 1px solid;";
                 }
                  
                 $htmloutput = 
                 "<div class='container d-flex align-items-center' style='{$borderstyle}'>".
-                '   <div class="row w-100 pt-3 pb-3">
-                        <div class="">'.
+                "   <div class='row w-100 {$paddingtop} pb-3'>".
+                '       <div class="align-self-center">'.
                             $userpicturehtml.
                 '       </div>           
                         <div class="d-flex flex-column justify-content-between">'.
@@ -107,11 +108,6 @@ class block_contactperson extends block_base {
                 '       </div>
                     </div>
                 </div>';
-                // "<a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a><br></span>". 
-                // '<div style="padding-bottom: 5px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'.
-                //  "<span><a href='mailto: {$email}'>{$fieldofaction}</a></span>".
-                //  $userpicturehtml.
-                //  '<br></div><div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
             }
             
         }

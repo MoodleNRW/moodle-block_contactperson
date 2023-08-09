@@ -109,7 +109,6 @@ class block_contactperson extends block_base {
                     </div>
                 </div>';
             }
-            
         }
         return $htmloutput;
     }

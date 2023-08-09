@@ -27,5 +27,5 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'block_contactperson';
 $plugin->release = '0.1.0';
 $plugin->version = 2023070802;
-$plugin->requires = 2022112800;
+$plugin->requires = 2021051700;
 $plugin->maturity = MATURITY_ALPHA;

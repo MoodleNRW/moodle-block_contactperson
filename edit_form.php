@@ -37,7 +37,7 @@ class block_contactperson_edit_form extends block_edit_form {
     //Lat Long Übergabe -> Später Refactoren damit n-Eintröge möglich sind
     private function addContactPerson($mform,$index){
 
-        $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." ".$index);
+        $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." {$index}");
 
         $config = get_config('block_contactperson');
         $options = array();
@@ -49,9 +49,8 @@ class block_contactperson_edit_form extends block_edit_form {
                 $options[$optionValue] = $optionValue;
             }
         }
-        $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson'). $index, $options);
+        $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson')." {$index}", $options);
         $mform->setDefault('config_usedcontactperson'.$index, get_string('nopersonassigned','block_contactperson'));
-       // $mform->setType('config_usedcontactperson'.$index, PARAM_TEXT);
     }
 
 

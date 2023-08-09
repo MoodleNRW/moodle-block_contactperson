@@ -70,7 +70,7 @@ class block_contactperson extends block_base {
     private function get_html_for_contactperson($usedcontactperson,$first = false, $last = false) {
         global $DB, $OUTPUT;
         $htmloutput = "";
-        if (strpos($usedcontactperson, 'empty') === false) {
+        if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
             $propertykey = $this->get_index_from_config($config,$usedcontactperson);
             if($propertykey) {

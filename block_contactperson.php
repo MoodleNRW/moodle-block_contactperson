@@ -85,7 +85,7 @@ class block_contactperson extends block_base {
 
                 $user = core_user::get_user($userid);
                 if ($user) {
-                    $userpicture = $OUTPUT->user_picture($user); 
+                    $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']); 
                     $userpicturehtml =  $userpicture; 
                 }
 

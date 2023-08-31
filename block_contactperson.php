@@ -51,60 +51,88 @@ class block_contactperson extends block_base {
         $this->content->icons = array();
         $this->content->footer = '';
 
+        // Hardcoded between 1 and 5.
+        $max_amount = get_config('block_contactperson','contactsmaxamount');
+
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
-            $usedcontactperson1 = $this->config->{'usedcontactperson1'};           
-            $usedcontactperson2 = $this->config->{'usedcontactperson2'};
-            $usedcontactperson3 = $this->config->{'usedcontactperson3'};
-            $text = 
-            $this->get_html_for_contactperson($usedcontactperson1, true, $usedcontactperson2 == 'empty') .
-            $this->get_html_for_contactperson($usedcontactperson2, false, $usedcontactperson3 == 'empty') .
-            $this->get_html_for_contactperson($usedcontactperson3, false, true);
+            for ($i=1; $i<=$max_amount; $i++) {
+                $contactperson = $this->config->{'usedcontactperson'.$i};
+                $text .= $this->get_html_for_contactperson($contactperson);
+            }
             $this->content->text = $text;
         }
 
         return $this->content;
     }
 
-    private function get_html_for_contactperson($usedcontactperson,$first = false, $last = false) {
+    private function get_html_for_contactperson($usedcontactperson) {
         global $DB, $OUTPUT;
+
         $htmloutput = "";
+
         if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
             $propertykey = $this->get_index_from_config($config,$usedcontactperson);
             if($propertykey) {
                 // Extrahiere die Zahl am Ende des Schlüssels
                 $key = substr($propertykey, -1 * (strlen($propertykey) - strlen('name')));
-                
+
+                // Depending on key extract contact information.
                 $contactpersonlink = $config->{'contactpersonlink'.$key};
                 $email = $config->{'email'.$key};
                 $fieldofaction = $config->{'fieldofaction'.$key};
                 $userid = $config->{'userid'.$key};
                 $userpicturehtml = "";
 
+                // Try to get user picture.
                 $user = core_user::get_user($userid);
                 if ($user) {
-                    $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']); 
-                    $userpicturehtml =  $userpicture; 
+                    $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
+                    $userpicturehtml =  $userpicture;
                 }
 
-                $borderstyle = "";
-                $paddingtop = $first ? "" : "pt-3";
+                // Try to get Team URLs for fields of action.
+                $fields = explode(" | ", $fieldofaction);
+                $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
+                $fields_to_url = array();
 
-                if (!$last){
-                    $borderstyle= "border-bottom: #dee2e6 1px solid;";
+                foreach ($fields as $field) {
+                    if (isset($mapping[$field])) {
+                        $fields_to_url[$field] = $mapping[$field];
+                    }
                 }
-                 
-                $htmloutput = 
-                "<div class='container d-flex align-items-center' style='{$borderstyle}'>".
-                "   <div class='row w-100 {$paddingtop} pb-3'>".
+
+                // Actual HTML Output.
+                // For the picture and name.
+                $htmloutput =
+                "<div class='container d-flex align-items-center contactperson'>".
+                "   <div class='row w-100 pb-3'>".
                 '       <div class="align-self-center">'.
                             $userpicturehtml.
-                '       </div>           
+                '       </div>
                         <div class="d-flex flex-column justify-content-between">'.
-                "           <a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a>".
-                "           <a href='mailto: {$email}'>{$fieldofaction}</a>".
+                "           <a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a>";
+
+                // For the fields of action.
+                $first = TRUE;
+                foreach ($fields_to_url as $key => $value) {
+                    $field = $key;
+                    $field_id = $value;
+
+                    $htmloutput .= "<div>";
+                    // If multiple fields seperate them by " | "
+                    if (!$first) { $htmloutput .= " | ";}
+
+                    $htmloutput .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$field_id}'>{$field}</a>
+                        (<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)
+                    </div>";
+
+                    if ($first) $first = FALSE;
+                }
+
+                $htmloutput .=
                 '       </div>
                     </div>
                 </div>';

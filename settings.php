@@ -30,22 +30,19 @@ define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
 define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
 
 if ($hassiteconfig) {
-    // $ADMIN->add('localplugins', new admin_category('block_contactperson', new lang_string('pluginname', 'block_contactperson')));
-    // $settingspage = new admin_settingpage('block_contactperson', new lang_string('pluginname', 'block_contactperson'));
-
     if ($ADMIN->fulltree) {
-        $settings->add(new admin_setting_confightmleditor(
-            'block_contactperson/additionalhtml',
-            get_string('additionalhtml', 'block_contactperson', array('no' => $i), null, true),
-            "",
-            ""
-        ));
 
-        //Option for enabling Contactperson
+        // Option for enabling Contactperson.
         $optionspersonenabled = array(
             BLOCK_CONTACTPERSON_SETTING_SELECT_YES =>   get_string('yes', 'block_contactperson', array('no' => $i), null, true),
             BLOCK_CONTACTPERSON_SETTING_SELECT_NO =>   get_string('no', 'block_contactperson', array('no' => $i), null, true)
         );
+
+        $name = 'block_contactperson/contactsmaxamount';
+        $title = 'Contact person maximum';
+        $description = 'How many contacts are maximal displayed in one contact block.';
+        $maxamount = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
+        $settings->add(new admin_setting_configselect($name, $title, $description, 2, $maxamount));
 
         for ($i = 1; $i <= 15; $i++) {
             $settings->add(new admin_setting_heading(
@@ -62,7 +59,7 @@ if ($hassiteconfig) {
                 $optionspersonenabled
             ));
 
-            // Option for the Name 
+            // Option for the Name.
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/name' . $i,
                 get_string('name', 'block_contactperson', array('no' => $i), null, true),
@@ -90,7 +87,7 @@ if ($hassiteconfig) {
                 'yes'
             );
 
-            // Option for the Email 
+            // Option for the Email
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/email' . $i,
                 get_string('email', 'block_contactperson', array('no' => $i), null, true),

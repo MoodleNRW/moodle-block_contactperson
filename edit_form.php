@@ -29,7 +29,8 @@
 
 class block_contactperson_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
-        for ($i = 1; $i <= 3; $i++) {
+        $max_amount = get_config('block_contactperson','contactsmaxamount');
+        for ($i = 1; $i <= $max_amount; $i++) {
             $this->addContactPerson($mform,$i);
         }
     }

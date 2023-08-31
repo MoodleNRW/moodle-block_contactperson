@@ -1,0 +1,12 @@
+.contactperson {
+    padding-top: 1rem;
+    border-bottom: #dee2e6 1px solid;
+}
+
+.contactperson:first-child {
+    padding-top: none;
+}
+
+.contactperson:nth-last-child(2) {
+    border-bottom: none;
+}

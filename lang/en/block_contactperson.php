@@ -25,17 +25,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Kontakt';
-$string['name'] = 'Kontaktperson';
-$string['contactpersonlink'] = 'Link zum Kontaktprofil';
-$string['userid'] = 'Id des Users';
-$string['fieldofaction'] = 'Handlungsfeld';
-$string['email'] = 'E-Mail';
-$string['fieldofacrion'] = 'Handlungsfeld';
-$string['additionalhtml'] = 'Additional Html';
+$string['pluginname'] = 'Contact';
+$string['name'] = 'Contactperson';
+$string['contactpersonlink'] = 'Link to contact person';
+$string['userid'] = 'Id of the user in Moodle';
+$string['fieldofaction'] = 'Department';
+$string['email'] = 'Email';
+$string['additionalhtml'] = 'Additional HTML';
 $string['personenabled'] = 'Kontaktperson vorhanden';
-$string['yes'] = 'Ja';
-$string['no'] = 'Nein';
-$string['dropdowncontactperson'] = "Auswahl Kontaktperson";
-$string['nopersonassigned'] = "Keine Person ausgewählt";
-
+$string['yes'] = 'Yes';
+$string['no'] = 'No';
+$string['dropdowncontactperson'] = "Select contact";
+$string['nopersonassigned'] = "No contact assigned";

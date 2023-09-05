@@ -35,9 +35,9 @@ class block_contactperson_edit_form extends block_edit_form {
         }
     }
 
-    //Lat Long Übergabe -> Später Refactoren damit n-Eintröge möglich sind
+    //Später Refactoren damit n-Eintröge möglich sind
     private function addContactPerson($mform,$index){
-
+        global $DB, $COURSE;
         $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." {$index}");
 
         $config = get_config('block_contactperson');
@@ -50,6 +50,21 @@ class block_contactperson_edit_form extends block_edit_form {
                 $options[$optionValue] = $optionValue;
             }
         }
+
+        $accessroles = $config->accessroles;
+        $accessrolesarray = explode(',',$accessroles);
+        $context = context_course::instance($COURSE->id);
+        $userroles = array();
+
+        foreach($accessrolesarray as $roleid) {
+            $userroles = array_merge($userroles, get_role_users($roleid, $context, false, 'u.id, u.firstname, u.lastname'));
+        }
+
+        foreach ($userroles as $user) {
+            $optionValue = $user->firstname ." ". $user->lastname;
+            $options[$user->id] = $optionValue;
+        }
+
         $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson')." {$index}", $options);
         $mform->setDefault('config_usedcontactperson'.$index, get_string('nopersonassigned','block_contactperson'));
     }

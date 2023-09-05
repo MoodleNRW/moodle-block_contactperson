@@ -37,3 +37,8 @@ $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['dropdowncontactperson'] = "Select contact";
 $string['nopersonassigned'] = "No contact assigned";
+$string['accessroles'] = "Berechtigte Personen";
+$string['addtionalperson'] = 'Zusätzliche Kontaktperson';
+
+
+

@@ -47,7 +47,7 @@ if ($hassiteconfig) {
         for ($i = 1; $i <= 15; $i++) {
             $settings->add(new admin_setting_heading(
                 'block_contactperson/contactpersonheader' . $i,
-                get_string('name', 'block_contactperson', array('no' => $i), null, true). " {$i}",
+                get_string('name', 'block_contactperson', array('no' => $i), null, true) . " {$i}",
                 null
             ));
 
@@ -129,7 +129,26 @@ if ($hassiteconfig) {
                 'yes'
             );
         }
-    }
 
-    // $ADMIN->add('localplugins', $settings);
+
+        $settings->add(new admin_setting_heading(
+            'block_contactperson/contactpersonheaderaccess' ,
+            get_string('addtionalperson', 'block_contactperson', array('no' => $i), null, true),
+            null
+        ));
+
+        $roles = role_get_names();
+        $role_options = array();
+        foreach ($roles as $role) {
+            $role_options[$role->id] = $role->localname;
+        }
+
+        $settings->add(new admin_setting_configmultiselect(
+            'block_contactperson/accessroles',
+            get_string('accessroles', 'block_contactperson', array('no' => $i), null, true),
+            "",
+            null,
+            $role_options
+        ));
+    }
 }

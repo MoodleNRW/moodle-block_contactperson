@@ -57,6 +57,7 @@ class block_contactperson extends block_base {
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
+            $text = "";
             for ($i=1; $i<=$max_amount; $i++) {
                 $contactperson = $this->config->{'usedcontactperson'.$i};
                 $text .= $this->get_html_for_contactperson($contactperson);

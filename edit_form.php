@@ -35,14 +35,11 @@ class block_contactperson_edit_form extends block_edit_form {
         }
     }
 
-    //Später Refactoren damit n-Eintröge möglich sind
-    private function addContactPerson($mform,$index){
-        global $DB, $COURSE;
-        $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." {$index}");
-
+    private function prepareUsedContactPersons(){
+        global $COURSE;
         $config = get_config('block_contactperson');
         $options = array();
-        $options['empty'] = get_string('nopersonassigned','block_contactperson');
+
         for ($i = 1; $i <= 15; $i++) {
             $nextname = 'name'.$i;
             if (!empty($config->{$nextname})) {
@@ -65,7 +62,20 @@ class block_contactperson_edit_form extends block_edit_form {
             $options[$user->id] = $optionValue;
         }
 
-        $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson')." {$index}", $options);
+        //Prepare result array for config_usedcontactperson.
+        asort($options);
+        $mergedarray = array_merge( array("empty" => get_string('nopersonassigned','block_contactperson')) ,$options);
+
+        return $mergedarray;
+    }
+
+    //Später Refactoren damit n-Eintröge möglich sind
+    private function addContactPerson($mform,$index){
+
+        $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." {$index}");
+
+        $optionsconfigusedcontactperson = $this->prepareUsedContactPersons();
+        $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson')." {$index}", $optionsconfigusedcontactperson);
         $mform->setDefault('config_usedcontactperson'.$index, get_string('nopersonassigned','block_contactperson'));
     }
 

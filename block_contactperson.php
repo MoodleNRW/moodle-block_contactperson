@@ -57,6 +57,7 @@ class block_contactperson extends block_base {
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
+            $text = "";
             for ($i=1; $i<=$max_amount; $i++) {
                 $contactperson = $this->config->{'usedcontactperson'.$i};
                 $text .= $this->get_html_for_contactperson($contactperson);
@@ -75,12 +76,26 @@ class block_contactperson extends block_base {
         if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
             $propertykey = $this->get_index_from_config($config,$usedcontactperson);
-            if($propertykey) {
+
+            //todo email 
+            //todo userid 
+            // contactpersonlink ist nicht immer gesetzt wenn User aus Kurs kommt
+            // fieldofaction ist nicht immer gesetzt wenn User aus Kurs kommt
+            //userpicturehtml -> Wird automatisch gefunden 
+            $contactpersonlink = null;
+            $name = null;
+            $email = null;
+            $fieldofaction =  null;
+            $userid = null;
+            $userpicturehtml = "";
+
+            if($propertykey){
                 // Extrahiere die Zahl am Ende des Schlüssels
                 $key = substr($propertykey, -1 * (strlen($propertykey) - strlen('name')));
 
                 // Depending on key extract contact information.
                 $contactpersonlink = $config->{'contactpersonlink'.$key};
+                $name = $usedcontactperson;
                 $email = $config->{'email'.$key};
                 $fieldofaction = $config->{'fieldofaction'.$key};
                 $userid = $config->{'userid'.$key};
@@ -92,7 +107,19 @@ class block_contactperson extends block_base {
                     $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
                     $userpicturehtml =  $userpicture;
                 }
+            }elseif ($propertykey == false) {
+               //Get Data from User
+               $user = core_user::get_user($usedcontactperson);
+               if ($user) {
+                $name =$user->firstname . " " . $user->lastname;
+                $email = $user->email;
+                $userid = $user->id;
+                $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
+                $userpicturehtml =  $userpicture;
+                }
+            } 
 
+            if($userid) {       
                 // Try to get Team URLs for fields of action.
                 $fields = explode(" | ", $fieldofaction);
                 $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
@@ -113,7 +140,7 @@ class block_contactperson extends block_base {
                             $userpicturehtml.
                 '       </div>
                         <div class="d-flex flex-column justify-content-between">'.
-                "           <a href='{$contactpersonlink}' target='_blank'>{$usedcontactperson}</a>";
+                "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
 
                 // For the fields of action.
                 $first = TRUE;

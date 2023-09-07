@@ -38,11 +38,30 @@ if ($hassiteconfig) {
             BLOCK_CONTACTPERSON_SETTING_SELECT_NO =>   get_string('no', 'block_contactperson', array('no' => $i), null, true)
         );
 
+        $heading_name = 'block_contactperson/contactpersonheadergeneral';
+        $heading_title = 'Allgemein';
+        $settings->add(new admin_setting_heading(
+            $heading_name,
+            $heading_title,
+            null
+        ));
+
+        $name = 'block_contactperson/placeholderimage';
+        $title = 'Placeholder image';
+        $description = 'Placeholder for contacts without a profile picture.';
+        $placeholderimagesetting = new admin_setting_configstoredfile($name, $title, $description, 'placeholderimage', 0,
+        array('maxfiles' => 1, 'accepted_types' => 'web_image'));
+        $placeholderimagesetting->set_updatedcallback('theme_reset_all_caches');
+
+        $setting->add($placeholderimagesetting);
+
         $name = 'block_contactperson/contactsmaxamount';
         $title = 'Contact person maximum';
         $description = 'How many contacts are maximal displayed in one contact block.';
         $maxamount = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
         $settings->add(new admin_setting_configselect($name, $title, $description, 2, $maxamount));
+
+
 
         for ($i = 1; $i <= 15; $i++) {
             $settings->add(new admin_setting_heading(
@@ -129,6 +148,7 @@ if ($hassiteconfig) {
                 'yes'
             );
         }
+
 
 
         $settings->add(new admin_setting_heading(

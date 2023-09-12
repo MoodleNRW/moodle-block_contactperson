@@ -53,7 +53,7 @@ if ($hassiteconfig) {
         array('maxfiles' => 1, 'accepted_types' => 'web_image'));
         $placeholderimagesetting->set_updatedcallback('theme_reset_all_caches');
 
-        $setting->add($placeholderimagesetting);
+        $settings->add($placeholderimagesetting);
 
         $name = 'block_contactperson/contactsmaxamount';
         $title = 'Contact person maximum';

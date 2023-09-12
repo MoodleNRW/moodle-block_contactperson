@@ -46,6 +46,12 @@ if ($hassiteconfig) {
             null
         ));
 
+        $name = 'block_contactperson/contactsmaxamount';
+        $title = 'Contact person maximum';
+        $description = 'How many contacts are maximal displayed in one contact block.';
+        $maxamount = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
+        $settings->add(new admin_setting_configselect($name, $title, $description, 2, $maxamount));
+
         $name = 'block_contactperson/placeholderimage';
         $title = 'Placeholder image';
         $description = 'Placeholder for contacts without a profile picture.';
@@ -54,14 +60,6 @@ if ($hassiteconfig) {
         $placeholderimagesetting->set_updatedcallback('theme_reset_all_caches');
 
         $settings->add($placeholderimagesetting);
-
-        $name = 'block_contactperson/contactsmaxamount';
-        $title = 'Contact person maximum';
-        $description = 'How many contacts are maximal displayed in one contact block.';
-        $maxamount = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
-        $settings->add(new admin_setting_configselect($name, $title, $description, 2, $maxamount));
-
-
 
         for ($i = 1; $i <= 15; $i++) {
             $settings->add(new admin_setting_heading(

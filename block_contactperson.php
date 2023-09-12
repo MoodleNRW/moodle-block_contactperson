@@ -75,13 +75,15 @@ class block_contactperson extends block_base {
 
         if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
-            $propertykey = $this->get_index_from_config($config,$usedcontactperson);
+            $extern_contact = $this->get_index_from_config($config,$usedcontactperson);
 
-            //todo email 
-            //todo userid 
+
+
+            //todo email
+            //todo userid
             // contactpersonlink ist nicht immer gesetzt wenn User aus Kurs kommt
             // fieldofaction ist nicht immer gesetzt wenn User aus Kurs kommt
-            //userpicturehtml -> Wird automatisch gefunden 
+            //userpicturehtml -> Wird automatisch gefunden
             $contactpersonlink = null;
             $name = null;
             $email = null;
@@ -89,9 +91,9 @@ class block_contactperson extends block_base {
             $userid = null;
             $userpicturehtml = "";
 
-            if($propertykey){
+            if($extern_contact) {
                 // Extrahiere die Zahl am Ende des Schlüssels
-                $key = substr($propertykey, -1 * (strlen($propertykey) - strlen('name')));
+                $key = substr($extern_contact, -1 * (strlen($extern_contact) - strlen('name')));
 
                 // Depending on key extract contact information.
                 $contactpersonlink = $config->{'contactpersonlink'.$key};
@@ -107,34 +109,40 @@ class block_contactperson extends block_base {
                     $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
                     $userpicturehtml =  $userpicture;
                 }
-            }elseif ($propertykey == false) {
+                $htmloutput .= $userid;
+            } else {
                //Get Data from User
                $user = core_user::get_user($usedcontactperson);
                if ($user) {
+
                 $name =$user->firstname . " " . $user->lastname;
                 $email = $user->email;
                 $userid = $user->id;
                 $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
                 $userpicturehtml =  $userpicture;
+                $htmloutput .= $userid;
                 }
-            } 
+            }
 
-            if($userid) {       
-                // Try to get Team URLs for fields of action.
-                $fields = explode(" | ", $fieldofaction);
-                $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
-                $fields_to_url = array();
 
-                foreach ($fields as $field) {
-                    if (isset($mapping[$field])) {
-                        $fields_to_url[$field] = $mapping[$field];
-                    }
-                }
+            $htmloutput = $this->get_html_for_user($name, $email, $fieldofaction, $userpicturehtml, $contactpersonlink);
+        }
+        return $htmloutput;
+    }
 
-                // Actual HTML Output.
-                // For the picture and name.
-                $htmloutput =
-                "<div class='container d-flex align-items-center contactperson'>".
+    private function get_html_for_user($name, $email, $fieldofaction, $userpicturehtml, $contactpersonlink) {
+        // Try to get Team URLs for fields of action.
+        $fields = explode(" | ", $fieldofaction);
+        $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
+        $fields_to_url = array();
+
+        foreach ($fields as $field) {
+            if (isset($mapping[$field])) {
+                $fields_to_url[$field] = $mapping[$field];
+            }
+        }
+
+        $result = "<div class='container d-flex align-items-center contactperson'>".
                 "   <div class='row w-100 pb-3'>".
                 '       <div class="align-self-center">'.
                             $userpicturehtml.
@@ -142,30 +150,24 @@ class block_contactperson extends block_base {
                         <div class="d-flex flex-column justify-content-between">'.
                 "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
 
-                // For the fields of action.
-                $first = TRUE;
-                foreach ($fields_to_url as $key => $value) {
-                    $field = $key;
-                    $field_id = $value;
+        // For the fields of action.
+        foreach ($fields_to_url as $key => $value) {
+            $field = $key;
+            $field_id = $value;
 
-                    $htmloutput .= "<div>";
-                    // If multiple fields seperate them by " | "
-                    if (!$first) { $htmloutput .= " | ";}
+            $result .= "<div>";
 
-                    $htmloutput .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$field_id}'>{$field}</a>
-                        (<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)
-                    </div>";
+            $result .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$field_id}'>{$field}</a>
+                (<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)
+            </div>";
+        }
 
-                    if ($first) $first = FALSE;
-                }
-
-                $htmloutput .=
+        $result .=
                 '       </div>
                     </div>
                 </div>';
-            }
-        }
-        return $htmloutput;
+
+                return $result;
     }
 
     private function get_index_from_config($config,$usedcontactperson) {

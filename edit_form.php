@@ -63,10 +63,11 @@ class block_contactperson_edit_form extends block_edit_form {
         }
 
         //Prepare result array for config_usedcontactperson.
-        asort($options);
-        $mergedarray = array_merge( array("empty" => get_string('nopersonassigned','block_contactperson')) ,$options);
+        arsort($options);
+        $options["empty"] = get_string('nopersonassigned','block_contactperson');
+        $options = array_reverse($options, true);
 
-        return $mergedarray;
+        return $options;
     }
 
     //Später Refactoren damit n-Eintröge möglich sind

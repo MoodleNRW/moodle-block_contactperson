@@ -55,8 +55,7 @@ if ($hassiteconfig) {
         $name = 'block_contactperson/placeholderimage';
         $title = 'Placeholder image';
         $description = 'Placeholder for contacts without a profile picture.';
-        $placeholderimagesetting = new admin_setting_configstoredfile($name, $title, $description, 'placeholderimage', 0,
-        array('maxfiles' => 1, 'accepted_types' => 'web_image'));
+        $placeholderimagesetting = new admin_setting_configstoredfile($name, $title, $description, 'placeholderimage', 0, array('maxfiles' => 1, 'accepted_types' => 'web_image'));
         $placeholderimagesetting->set_updatedcallback('theme_reset_all_caches');
 
         $settings->add($placeholderimagesetting);

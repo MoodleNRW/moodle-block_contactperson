@@ -75,12 +75,24 @@ class block_contactperson extends block_base {
         if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
             $externcontact = $this->get_index_from_config($config, $usedcontactperson);
+
+            $userpicturehtml = "a";
+
+            $fs = get_file_storage();
+            $systemcontext = context_system::instance();
+            $files = $fs->get_area_files($systemcontext->id, 'block_contactperson', 'placeholderimage', false, 'itemid', false);
+            $file = reset($files);
+            $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
+            $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+
+            $userpicturehtml = "<img class='d-block w-100' src='{$url}' alt=''>";
+
             $contactpersonlink = null;
             $name = null;
             $email = null;
             $fieldofaction = null;
             $userid = null;
-            $userpicturehtml = "";
+            // $userpicturehtml = "";
 
             if ($externcontact) {
                 // Extrahiere die Zahl am Ende des Schlüssels.
@@ -92,7 +104,7 @@ class block_contactperson extends block_base {
                 $email = $config->{'email' . $key};
                 $fieldofaction = $config->{'fieldofaction' . $key};
                 $userid = $config->{'userid' . $key};
-                $userpicturehtml = "";
+                // $userpicturehtml = "<a href='www.google.com' class='d-inline-block aabtn'><span class='userinitials size-35'>BO</span></a>";
 
                 // Try to get user picture.
                 $user = core_user::get_user($userid);

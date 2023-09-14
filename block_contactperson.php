@@ -66,7 +66,12 @@ class block_contactperson extends block_base {
 
         return $this->content;
     }
-
+    /**
+     * Returns the HTML for a contact person.
+     * 
+     * @param string $usedcontactperson The used contact person.
+     * @return string The HTML for a contact person.
+     */
     private function get_html_for_contactperson($usedcontactperson) {
         global $DB, $OUTPUT;
 
@@ -91,6 +96,11 @@ class block_contactperson extends block_base {
             $name = null;
             $email = null;
             $fieldofaction = null;
+            $emailfieldofaction = null;
+            $linkfieldofaction = null;
+            $additionalfieldofaction = null;
+            $emailadditionalfieldofaction = null;
+            $linkadditionalfieldofaction = null;
             $userid = null;
             // $userpicturehtml = "";
 
@@ -101,7 +111,6 @@ class block_contactperson extends block_base {
                 // Depending on key extract contact information.
                 $contactpersonlink = $config->{'contactpersonlink' . $key};
                 $name = $usedcontactperson;
-                $email = $config->{'email' . $key};
                 $fieldofaction = $config->{'fieldofaction' . $key};
                 $userid = $config->{'userid' . $key};
                 // $userpicturehtml = "<a href='www.google.com' class='d-inline-block aabtn'><span class='userinitials size-35'>BO</span></a>";
@@ -126,42 +135,46 @@ class block_contactperson extends block_base {
                 }
             }
 
-            $htmloutput = $this->get_html_for_user($name, $email, $fieldofaction, $userpicturehtml, $contactpersonlink);
-        }
+            $htmloutput = $this->get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
+                                                    $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
+                                                    $linkadditionalfieldofaction, $userpicturehtml, $contactpersonlink);        }
         return $htmloutput;
     }
 
-    private function get_html_for_user($name, $email, $fieldofaction, $userpicturehtml, $contactpersonlink) {
-        // Try to get Team URLs for fields of action.
-        $fields = explode(" | ", $fieldofaction);
-        $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
-        $fieldstourl = array();
-
-        foreach ($fields as $field) {
-            if (isset($mapping[$field])) {
-                $fieldstourl[$field] = $mapping[$field];
-            }
-        }
+    /**
+     * Returns the HTML for a user.
+     * 
+     * @param string $name The name of the user.
+     * @param string $email The email of the user.
+     * @param string $fieldofaction The field of action of the user.
+     * @param string $emailfieldofaction The email field of action of the user.
+     * @param string $linkfieldofaction The link field of action of the user.
+     * @param string $additionalfieldofaction The additional field of action of the user.
+     * @param string $emailadditionalfieldofaction The email additional field of action of the user.
+     * @param string $linkadditionalfieldofaction The link additional field of action of the user.
+     * @param string $userpicturehtml The user picture HTML.
+     * @param string $contactpersonlink The contact person link.
+     * 
+     * @return string The HTML for a user.  
+     */
+    private function get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
+                                        $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
+                                        $linkadditionalfieldofaction, $userpicturehtml, $contactpersonlink) {
 
         $result = "<div class='container d-flex align-items-center contactperson'>" .
             "   <div class='row w-100 pb-3'>" .
             '       <div class="align-self-center">' .
             $userpicturehtml .
             '       </div>
-                        <div class="d-flex flex-column justify-content-between">' .
+                        <div>' .
             "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
 
-        // For the fields of action.
-        foreach ($fieldstourl as $key => $value) {
-            $field = $key;
-            $fieldid = $value;
-
-            $result .= "<div>";
-
-            $result .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$fieldid}'>{$field}</a>
-                (<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)
-            </div>";
+        if($email){
+            $result .= "(<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)";
         }
+
+        $result .= $this->getActionFieldHtml($fieldofaction, $emailfieldofaction, $linkfieldofaction);
+        $result .= $this->getActionFieldHtml($additionalfieldofaction, $emailadditionalfieldofaction, $linkadditionalfieldofaction);
 
         $result .=
             '       </div>
@@ -171,6 +184,26 @@ class block_contactperson extends block_base {
         return $result;
     }
 
+    private function getActionFieldHtml($field, $email, $link) {
+        if($field) {
+            return <<<HTML
+            <div>
+                <a href='$link'>$field</a>
+                (<a class='fa fa-envelope-o' href='mailto: $email'></a>)
+            </div>
+            HTML;
+        }
+        return "";
+    }
+
+    /**
+     * Returns the index from the config.
+     * 
+     * @param stdClass $config The config.
+     * @param string $usedcontactperson The used contact person.
+     * 
+     * @return string The index from the config.
+     */
     private function get_index_from_config($config, $usedcontactperson) {
         $properties = get_object_vars($config);
         $key = array_search($usedcontactperson, $properties);

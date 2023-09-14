@@ -30,6 +30,11 @@ $string['name'] = 'Contactperson';
 $string['contactpersonlink'] = 'Link to contact person';
 $string['userid'] = 'Id of the user in Moodle';
 $string['fieldofaction'] = 'Department';
+$string['linkfieldofaction'] = 'Link Department';
+$string['emailfieldofaction'] = 'Link Department';
+$string['additionalfieldofaction'] = 'Additional Department';
+$string['linkadditionalfieldofaction'] = 'Link Additional Department';
+$string['emailadditionalfieldofaction'] = 'Link Additional Department';
 $string['email'] = 'Email';
 $string['additionalhtml'] = 'Additional HTML';
 $string['personenabled'] = 'Kontaktperson vorhanden';
@@ -39,6 +44,4 @@ $string['dropdowncontactperson'] = "Select contact";
 $string['nopersonassigned'] = "No contact assigned";
 $string['accessroles'] = "Berechtigte Personen";
 $string['addtionalperson'] = 'Zusätzliche Kontaktperson';
-
-
 

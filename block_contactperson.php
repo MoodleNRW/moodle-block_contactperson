@@ -21,6 +21,9 @@
  * @copyright   2023 Moodle.NRW <alexander.mikasch@ruhr-uni-bochum.de
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+require_once($CFG->dirroot . '/blocks/contactperson/locallib.php');
+
 class block_contactperson extends block_base {
     /**
      * Initializes class member variables.
@@ -68,12 +71,12 @@ class block_contactperson extends block_base {
     }
     /**
      * Returns the HTML for a contact person.
-     * 
+     *
      * @param string $usedcontactperson The used contact person.
      * @return string The HTML for a contact person.
      */
     private function get_html_for_contactperson($usedcontactperson) {
-        global $DB, $OUTPUT;
+        global $OUTPUT;
 
         $htmloutput = "";
 
@@ -81,14 +84,7 @@ class block_contactperson extends block_base {
             $config = get_config('block_contactperson');
             $externcontact = $this->get_index_from_config($config, $usedcontactperson);
 
-            $userpicturehtml = "a";
-
-            $fs = get_file_storage();
-            $systemcontext = context_system::instance();
-            $files = $fs->get_area_files($systemcontext->id, 'block_contactperson', 'placeholderimage', false, 'itemid', false);
-            $file = reset($files);
-            $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
-            $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+            $url = block_contactperson_get_url_of_placeholderimage();
 
             $userpicturehtml = "<img class='d-block w-100' src='{$url}' alt=''>";
 
@@ -143,7 +139,7 @@ class block_contactperson extends block_base {
 
     /**
      * Returns the HTML for a user.
-     * 
+     *
      * @param string $name The name of the user.
      * @param string $email The email of the user.
      * @param string $fieldofaction The field of action of the user.
@@ -154,8 +150,8 @@ class block_contactperson extends block_base {
      * @param string $linkadditionalfieldofaction The link additional field of action of the user.
      * @param string $userpicturehtml The user picture HTML.
      * @param string $contactpersonlink The contact person link.
-     * 
-     * @return string The HTML for a user.  
+     *
+     * @return string The HTML for a user.
      */
     private function get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
                                         $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
@@ -198,10 +194,10 @@ class block_contactperson extends block_base {
 
     /**
      * Returns the index from the config.
-     * 
+     *
      * @param stdClass $config The config.
      * @param string $usedcontactperson The used contact person.
-     * 
+     *
      * @return string The index from the config.
      */
     private function get_index_from_config($config, $usedcontactperson) {

@@ -154,28 +154,15 @@ class block_contactperson extends block_base {
             '       <div class="align-self-center">' .
             $userpicturehtml .
             '       </div>
-                        <div class="d-flex flex-column justify-content-between">' .
+                        <div>' .
             "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
 
         if($email){
-            $result .= "<div>(<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)</div>";
+            $result .= "(<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)";
         }
 
-        if($fieldofaction){
-            $result .= "
-            <div>
-                <a href='{$linkfieldofaction}'>{$fieldofaction}</a>
-                (<a class='fa fa-envelope-o' href='mailto: {$emailfieldofaction}'></a>)
-            </div>";
-        }
-
-        if($additionalfieldofaction){
-            $result .= "
-            <div>
-                <a href='{$linkadditionalfieldofaction}'>{$additionalfieldofaction}</a>
-                (<a class='fa fa-envelope-o' href='mailto: {$emailadditionalfieldofaction}'></a>)
-            </div>";
-        }
+        $result .= $this->getActionFieldHtml($fieldofaction, $emailfieldofaction, $linkfieldofaction);
+        $result .= $this->getActionFieldHtml($additionalfieldofaction, $emailadditionalfieldofaction, $linkadditionalfieldofaction);
 
         $result .=
             '       </div>
@@ -183,6 +170,18 @@ class block_contactperson extends block_base {
                 </div>';
 
         return $result;
+    }
+
+    private function getActionFieldHtml($field, $email, $link) {
+        if($field) {
+            return <<<HTML
+            <div>
+                <a href='$link'>$field</a>
+                (<a class='fa fa-envelope-o' href='mailto: $email'></a>)
+            </div>
+            HTML;
+        }
+        return "";
     }
 
     /**

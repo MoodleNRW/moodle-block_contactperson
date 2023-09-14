@@ -148,7 +148,7 @@ class block_contactperson extends block_base {
     private function get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
                                         $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
                                         $linkadditionalfieldofaction, $userpicturehtml, $contactpersonlink) {
-                                            
+
         $result = "<div class='container d-flex align-items-center contactperson'>" .
             "   <div class='row w-100 pb-3'>" .
             '       <div class="align-self-center">' .

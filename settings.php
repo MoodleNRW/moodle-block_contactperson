@@ -29,7 +29,10 @@ defined('MOODLE_INTERNAL') || die();
 define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
 define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
 
-$add_contactperson_setting = function($settings, $name, $i, $default = "", $conditionValue = 'yes') {
+/**
+ * Add a setting for a contact person.
+ */
+$add_contactperson_configtexts = function($settings, $name, $i, $default = "", $conditionValue = 'yes'){
     $settings->add(new admin_setting_configtext(
         "block_contactperson/$name" . $i,
         get_string($name, 'block_contactperson', array('no' => $i), null, true),
@@ -42,6 +45,48 @@ $add_contactperson_setting = function($settings, $name, $i, $default = "", $cond
         'neq',
         $conditionValue
     );
+};
+
+/**
+ * Add a setting for a contact person.
+ * 
+ * @param $settings The settings object.
+ * @param $optionspersonenabled The options for the person enabled setting.
+ * $add_contactperson_configtexts The function for adding a config text.
+ */
+$add_contactperson_settings = function($settings, $optionspersonenabled) use ($add_contactperson_configtexts) {
+    $settingkeys = [
+        'name', 
+        'contactpersonlink', 
+        'userid', 
+        'fieldofaction', 
+        'linkfieldofaction',
+        'emailfieldofaction',
+        'additionalfieldofaction',
+        'linkadditionalfieldofaction',
+        'emailadditionalfieldofaction',
+    ];
+
+    // Add settings for each contact person.
+    for ($i = 1; $i <= 15; $i++) {
+        $settings->add(new admin_setting_heading(
+            'block_contactperson/contactpersonheader' . $i,
+            get_string('name', 'block_contactperson', array('no' => $i), null, true) . " {$i}",
+            null
+        ));
+
+        $settings->add(new admin_setting_configselect(
+            'block_contactperson/personenabled' . $i,
+            get_string('personenabled', 'block_contactperson', array('no' => $i), null, true),
+            "",
+            BLOCK_CONTACTPERSON_SETTING_SELECT_NO,
+            $optionspersonenabled
+        ));
+
+        foreach ($settingkeys as $key) {
+            $add_contactperson_configtexts($settings, $key, $i);
+        }
+    }
 };
 
 if ($hassiteconfig) {
@@ -76,37 +121,7 @@ if ($hassiteconfig) {
 
         $settings->add($placeholderimagesetting);
 
-        $settingkeys = [
-            'name', 
-            'contactpersonlink', 
-            'userid', 
-            'fieldofaction', 
-            'linkfieldofaction',
-            'emailfieldofaction',
-            'additionalfieldofaction',
-            'linkadditionalfieldofaction',
-            'emailadditionalfieldofaction',
-        ];
-
-        for ($i = 1; $i <= 15; $i++) {
-            $settings->add(new admin_setting_heading(
-                'block_contactperson/contactpersonheader' . $i,
-                get_string('name', 'block_contactperson', array('no' => $i), null, true) . " {$i}",
-                null
-            ));
-
-            $settings->add(new admin_setting_configselect(
-                'block_contactperson/personenabled' . $i,
-                get_string('personenabled', 'block_contactperson', array('no' => $i), null, true),
-                "",
-                BLOCK_CONTACTPERSON_SETTING_SELECT_NO,
-                $optionspersonenabled
-            ));
-
-            foreach ($settingkeys as $key) {
-                $add_contactperson_setting($settings, $key, $i);
-            }
-        }
+        $add_contactperson_settings($settings, $optionspersonenabled);
 
         $settings->add(new admin_setting_heading(
             'block_contactperson/contactpersonheaderaccess' ,

@@ -29,13 +29,13 @@
 
 class block_contactperson_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
-        $max_amount = get_config('block_contactperson','contactsmaxamount');
-        for ($i = 1; $i <= $max_amount; $i++) {
-            $this->addContactPerson($mform,$i);
+        $maxamount = get_config('block_contactperson', 'contactsmaxamount');
+        for ($i = 1; $i <= $maxamount; $i++) {
+            $this->add_contact_person($mform, $i);
         }
     }
 
-    private function prepareUsedContactPersons(){
+    private function prepare_used_contact_persons() {
         global $COURSE;
         $config = get_config('block_contactperson');
         $options = array();
@@ -43,42 +43,42 @@ class block_contactperson_edit_form extends block_edit_form {
         for ($i = 1; $i <= 15; $i++) {
             $nextname = 'name'.$i;
             if (!empty($config->{$nextname})) {
-                $optionValue = $config->{$nextname};
-                $options[$optionValue] = $optionValue;
+                $optionvalue = $config->{$nextname};
+                $options[$optionvalue] = $optionvalue;
             }
         }
 
         $accessroles = $config->accessroles;
-        $accessrolesarray = explode(',',$accessroles);
+        $accessrolesarray = explode(',', $accessroles);
         $context = context_course::instance($COURSE->id);
         $userroles = array();
 
-        foreach($accessrolesarray as $roleid) {
+        foreach ($accessrolesarray as $roleid) {
             $userroles = array_merge($userroles, get_role_users($roleid, $context, false, 'u.id, u.firstname, u.lastname'));
         }
 
         foreach ($userroles as $user) {
-            $optionValue = $user->firstname ." ". $user->lastname;
-            $options[$user->id] = $optionValue;
+            $optionvalue = $user->firstname ." ". $user->lastname;
+            $options[$user->id] = $optionvalue;
         }
 
-        //Prepare result array for config_usedcontactperson.
+        // Prepare result array for config_usedcontactperson.
         arsort($options);
-        $options["empty"] = get_string('nopersonassigned','block_contactperson');
+        $options["empty"] = get_string('nopersonassigned', 'block_contactperson');
         $options = array_reverse($options, true);
 
         return $options;
     }
 
-    //Später Refactoren damit n-Eintröge möglich sind
-    private function addContactPerson($mform,$index){
+    // Später Refactoren damit n-Eintröge möglich sind.
+    private function add_contact_person($mform, $index) {
 
         $mform->addElement('header', 'configheader', get_string('name', 'block_contactperson')." {$index}");
 
-        $optionsconfigusedcontactperson = $this->prepareUsedContactPersons();
-        $mform->addElement('select', 'config_usedcontactperson'.$index, get_string('dropdowncontactperson', 'block_contactperson')." {$index}", $optionsconfigusedcontactperson);
-        $mform->setDefault('config_usedcontactperson'.$index, get_string('nopersonassigned','block_contactperson'));
+        $optionsconfigusedcontactperson = $this->prepare_used_contact_persons();
+        $mform->addElement('select', 'config_usedcontactperson'.$index,
+                            get_string('dropdowncontactperson',
+                            'block_contactperson')." {$index}", $optionsconfigusedcontactperson);
+        $mform->setDefault('config_usedcontactperson'.$index, get_string('nopersonassigned', 'block_contactperson'));
     }
-
-
 }

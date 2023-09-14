@@ -34,22 +34,22 @@ if ($hassiteconfig) {
 
         // Option for enabling Contactperson.
         $optionspersonenabled = array(
-            BLOCK_CONTACTPERSON_SETTING_SELECT_YES =>   get_string('yes', 'block_contactperson', array('no' => $i), null, true),
-            BLOCK_CONTACTPERSON_SETTING_SELECT_NO =>   get_string('no', 'block_contactperson', array('no' => $i), null, true)
+            BLOCK_CONTACTPERSON_SETTING_SELECT_YES => get_string('yes', 'block_contactperson', array('no' => $i), null, true),
+            BLOCK_CONTACTPERSON_SETTING_SELECT_NO => get_string('no', 'block_contactperson', array('no' => $i), null, true)
         );
 
-        $heading_name = 'block_contactperson/contactpersonheadergeneral';
-        $heading_title = 'Allgemein';
+        $headingname = 'block_contactperson/contactpersonheadergeneral';
+        $headingtitle = 'Allgemein';
         $settings->add(new admin_setting_heading(
-            $heading_name,
-            $heading_title,
+            $headingname,
+            $headingtitle,
             null
         ));
 
         $name = 'block_contactperson/contactsmaxamount';
         $title = 'Contact person maximum';
         $description = 'How many contacts are maximal displayed in one contact block.';
-        $maxamount = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
+        $maxamount = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5);
         $settings->add(new admin_setting_configselect($name, $title, $description, 2, $maxamount));
 
         $name = 'block_contactperson/placeholderimage';
@@ -90,7 +90,7 @@ if ($hassiteconfig) {
                 'yes'
             );
 
-            // Option for the Contactpersonlink
+            // Option for the Contactpersonlink.
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/contactpersonlink' . $i,
                 get_string('contactpersonlink', 'block_contactperson', array('no' => $i), null, true),
@@ -104,7 +104,7 @@ if ($hassiteconfig) {
                 'yes'
             );
 
-            // Option for the Email
+            // Option for the Email.
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/email' . $i,
                 get_string('email', 'block_contactperson', array('no' => $i), null, true),
@@ -118,7 +118,7 @@ if ($hassiteconfig) {
                 'yes'
             );
 
-            // Option for UserId
+            // Option for UserId.
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/userid' . $i,
                 get_string('userid', 'block_contactperson', array('no' => $i), null, true),
@@ -132,7 +132,7 @@ if ($hassiteconfig) {
                 'yes'
             );
 
-            // Option for the fieldofacrion
+            // Option for the fieldofacrion.
             $settings->add(new admin_setting_configtext(
                 'block_contactperson/fieldofaction' . $i,
                 get_string('fieldofaction', 'block_contactperson', array('no' => $i), null, true),
@@ -147,8 +147,6 @@ if ($hassiteconfig) {
             );
         }
 
-
-
         $settings->add(new admin_setting_heading(
             'block_contactperson/contactpersonheaderaccess' ,
             get_string('addtionalperson', 'block_contactperson', array('no' => $i), null, true),
@@ -156,9 +154,9 @@ if ($hassiteconfig) {
         ));
 
         $roles = role_get_names();
-        $role_options = array();
+        $roleoptions = array();
         foreach ($roles as $role) {
-            $role_options[$role->id] = $role->localname;
+            $roleoptions[$role->id] = $role->localname;
         }
 
         $settings->add(new admin_setting_configmultiselect(
@@ -166,7 +164,7 @@ if ($hassiteconfig) {
             get_string('accessroles', 'block_contactperson', array('no' => $i), null, true),
             "",
             null,
-            $role_options
+            $roleoptions
         ));
     }
 }

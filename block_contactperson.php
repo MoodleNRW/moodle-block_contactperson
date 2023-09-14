@@ -22,7 +22,6 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_contactperson extends block_base {
-
     /**
      * Initializes class member variables.
      */
@@ -52,14 +51,14 @@ class block_contactperson extends block_base {
         $this->content->footer = '';
 
         // Hardcoded between 1 and 5.
-        $max_amount = get_config('block_contactperson','contactsmaxamount');
+        $maxamount = get_config('block_contactperson', 'contactsmaxamount');
 
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
             $text = "";
-            for ($i=1; $i<=$max_amount; $i++) {
-                $contactperson = $this->config->{'usedcontactperson'.$i};
+            for ($i = 1; $i <= $maxamount; $i++) {
+                $contactperson = $this->config->{'usedcontactperson' . $i};
                 $text .= $this->get_html_for_contactperson($contactperson);
             }
             $this->content->text = $text;
@@ -75,55 +74,45 @@ class block_contactperson extends block_base {
 
         if ($usedcontactperson !== "empty") {
             $config = get_config('block_contactperson');
-            $extern_contact = $this->get_index_from_config($config,$usedcontactperson);
-
-
-
-            //todo email
-            //todo userid
-            // contactpersonlink ist nicht immer gesetzt wenn User aus Kurs kommt
-            // fieldofaction ist nicht immer gesetzt wenn User aus Kurs kommt
-            //userpicturehtml -> Wird automatisch gefunden
+            $externcontact = $this->get_index_from_config($config, $usedcontactperson);
             $contactpersonlink = null;
             $name = null;
             $email = null;
-            $fieldofaction =  null;
+            $fieldofaction = null;
             $userid = null;
             $userpicturehtml = "";
 
-            if($extern_contact) {
-                // Extrahiere die Zahl am Ende des Schlüssels
-                $key = substr($extern_contact, -1 * (strlen($extern_contact) - strlen('name')));
+            if ($externcontact) {
+                // Extrahiere die Zahl am Ende des Schlüssels.
+                $key = substr($externcontact, -1 * (strlen($externcontact) - strlen('name')));
 
                 // Depending on key extract contact information.
-                $contactpersonlink = $config->{'contactpersonlink'.$key};
+                $contactpersonlink = $config->{'contactpersonlink' . $key};
                 $name = $usedcontactperson;
-                $email = $config->{'email'.$key};
-                $fieldofaction = $config->{'fieldofaction'.$key};
-                $userid = $config->{'userid'.$key};
+                $email = $config->{'email' . $key};
+                $fieldofaction = $config->{'fieldofaction' . $key};
+                $userid = $config->{'userid' . $key};
                 $userpicturehtml = "";
 
                 // Try to get user picture.
                 $user = core_user::get_user($userid);
                 if ($user) {
-                    $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
-                    $userpicturehtml =  $userpicture;
+                    $userpicture = $OUTPUT->user_picture($user, ['courseid' => '1']);
+                    $userpicturehtml = $userpicture;
                 }
                 $htmloutput .= $userid;
             } else {
-               //Get Data from User
-               $user = core_user::get_user($usedcontactperson);
-               if ($user) {
+                $user = core_user::get_user($usedcontactperson);
+                if ($user) {
 
-                $name =$user->firstname . " " . $user->lastname;
-                $email = $user->email;
-                $userid = $user->id;
-                $userpicture = $OUTPUT->user_picture($user,['courseid' => '1']);
-                $userpicturehtml =  $userpicture;
-                $htmloutput .= $userid;
+                    $name = $user->firstname . " " . $user->lastname;
+                    $email = $user->email;
+                    $userid = $user->id;
+                    $userpicture = $OUTPUT->user_picture($user, ['courseid' => '1']);
+                    $userpicturehtml = $userpicture;
+                    $htmloutput .= $userid;
                 }
             }
-
 
             $htmloutput = $this->get_html_for_user($name, $email, $fieldofaction, $userpicturehtml, $contactpersonlink);
         }
@@ -134,49 +123,49 @@ class block_contactperson extends block_base {
         // Try to get Team URLs for fields of action.
         $fields = explode(" | ", $fieldofaction);
         $mapping = array("Entwicklung & Technik" => 17, "Support & Anwendungswissen" => 18, "E-Assessment" => 19);
-        $fields_to_url = array();
+        $fieldstourl = array();
 
         foreach ($fields as $field) {
             if (isset($mapping[$field])) {
-                $fields_to_url[$field] = $mapping[$field];
+                $fieldstourl[$field] = $mapping[$field];
             }
         }
 
-        $result = "<div class='container d-flex align-items-center contactperson'>".
-                "   <div class='row w-100 pb-3'>".
-                '       <div class="align-self-center">'.
-                            $userpicturehtml.
-                '       </div>
-                        <div class="d-flex flex-column justify-content-between">'.
-                "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
+        $result = "<div class='container d-flex align-items-center contactperson'>" .
+            "   <div class='row w-100 pb-3'>" .
+            '       <div class="align-self-center">' .
+            $userpicturehtml .
+            '       </div>
+                        <div class="d-flex flex-column justify-content-between">' .
+            "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
 
         // For the fields of action.
-        foreach ($fields_to_url as $key => $value) {
+        foreach ($fieldstourl as $key => $value) {
             $field = $key;
-            $field_id = $value;
+            $fieldid = $value;
 
             $result .= "<div>";
 
-            $result .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$field_id}'>{$field}</a>
+            $result .= "<a href='https://moodlenrw.de/course/index.php?categoryid={$fieldid}'>{$field}</a>
                 (<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)
             </div>";
         }
 
         $result .=
-                '       </div>
+            '       </div>
                     </div>
                 </div>';
 
-                return $result;
+        return $result;
     }
 
-    private function get_index_from_config($config,$usedcontactperson) {
+    private function get_index_from_config($config, $usedcontactperson) {
         $properties = get_object_vars($config);
         $key = array_search($usedcontactperson, $properties);
         return $key;
     }
 
-    function has_config() {
+    public function has_config() {
         return true;
     }
 

@@ -82,7 +82,7 @@ class block_contactperson extends block_base {
 
         $htmloutput = "";
 
-        if ($usedcontactperson !== "empty") {
+        if ($usedcontactperson !== "empty" && $usedcontactperson !== null ) {
             $config = get_config('block_contactperson');
             $externcontact = $this->get_index_from_config($config, $usedcontactperson);
 
@@ -147,6 +147,15 @@ class block_contactperson extends block_base {
         return $userdata;
     }
 
+    private function add_url_prefix($url) {
+        if (preg_match("/^https?:\/\//", $url)) {
+            return $url;
+        } else {
+            return 'https://' . $url;
+        }
+    }
+    
+
     /**
      * Returns the HTML for a user.
      *
@@ -155,13 +164,15 @@ class block_contactperson extends block_base {
      * @return string The HTML for a user.
      */
     private function get_html_for_user($userdata) {
+
+        $prefixurlcheck = $this->add_url_prefix($userdata->contactpersonlink);
         $result = "<div class='container d-flex align-items-center contactperson'>" .
             "   <div class='row w-100 pb-3'>" .
             '       <div class="align-self-center">' .
             $userdata->userpicturehtml .
             '       </div>
                         <div>' .
-            "           <a href='{$userdata->contactpersonlink}' target='_blank'>{$userdata->name}</a>";
+            "           <a href='{$prefixurlcheck}' target='_blank'>{$userdata->name}</a>";
 
         if ($userdata->email) {
             $result .= "(<a class='fa fa-envelope-o' href='mailto: {$userdata->email}'></a>)";

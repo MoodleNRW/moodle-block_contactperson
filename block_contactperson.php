@@ -106,7 +106,11 @@ class block_contactperson extends block_base {
                 // Try to get user picture.
                 $user = core_user::get_user($userdata->userid);
                 if ($user) {
-                    $userdata->userpicturehtml = $OUTPUT->user_picture($user, ['courseid' => '1']);
+                    $preparedurl = $this->add_url_prefix($userdata->contactpersonlink);
+                    $temppicturehtml = $OUTPUT->user_picture($user, ['courseid' => '1']);
+                    $userdata->userpicturehtml =  preg_replace('#<a href="([^"]+)"#',
+                     '<a href="' . $preparedurl . '"', $temppicturehtml);
+                
                 }
                 $htmloutput .= $userdata->userid;
             } else {

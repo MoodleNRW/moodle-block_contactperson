@@ -96,6 +96,10 @@ class block_contactperson extends block_base {
                 $userdata->contactpersonlink = $config->{'contactpersonlink' . $key};
                 $userdata->name = $usedcontactperson;
                 $userdata->fieldofaction = $config->{'fieldofaction' . $key};
+                $userdata->emailfieldofaction = $config->{'emailfieldofaction' . $key};
+                $userdata->linkfieldofaction = $config->{'linkfieldofaction' . $key};
+                $userdata->additionalfieldofaction = $config->{'additionalfieldofaction' . $key};
+                $userdata->linkadditionalfieldofaction = $config->{'linkadditionalfieldofaction' . $key};
                 $userdata->userid = $config->{'userid' . $key};
 
                 // Try to get user picture.
@@ -178,12 +182,14 @@ class block_contactperson extends block_base {
             $result .= "(<a class='fa fa-envelope-o' href='mailto: {$userdata->email}'></a>)";
         }
 
+        $linkfieldofaction = $this->add_url_prefix($userdata->linkfieldofaction);
         $result .= $this->get_action_field_html($userdata->fieldofaction,
                                                 $userdata->emailfieldofaction,
-                                                $userdata->linkfieldofaction);
+                                                $linkfieldofaction);
+        $additionalfieldofaction = $this->add_url_prefix($userdata->linkadditionalfieldofaction);
         $result .= $this->get_action_field_html($userdata->additionalfieldofaction,
                                              $userdata->emailadditionalfieldofaction,
-                                             $userdata->linkadditionalfieldofaction);
+                                             $additionalfieldofaction);
 
         $result .=
             '       </div>
@@ -198,7 +204,7 @@ class block_contactperson extends block_base {
             return <<<HTML
             <div>
                 <a href='$link'>$field</a>
-                (<a class='fa fa-envelope-o' href='mailto: $email'></a>)
+                (<a class='fa fa-envelope-o' href='mailto:$email'></a>)
             </div>
             HTML;
         }

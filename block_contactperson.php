@@ -22,6 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/blocks/contactperson/locallib.php');
 
 class block_contactperson extends block_base {
@@ -111,11 +112,11 @@ class block_contactperson extends block_base {
                     $userdata->email = $user->email;
                     $userdata->userid = $user->id;
                     $userdata->userpicturehtml = $OUTPUT->user_picture($user, ['courseid' => '1']);
-                    $htmloutput .=  $userdata->userid;
+                    $htmloutput .= $userdata->userid;
                 }
             }
 
-            $htmloutput = $this->get_html_for_user($userdata);        
+            $htmloutput = $this->get_html_for_user($userdata);
         }
         return $htmloutput;
     }
@@ -126,7 +127,7 @@ class block_contactperson extends block_base {
      * @return stdClass $userdata The user data.
      *
      */
-    private function get_prepared_userdata(){
+    private function get_prepared_userdata() {
         $url = block_contactperson_get_url_of_placeholderimage();
 
         $userdata = new stdClass();
@@ -138,7 +139,8 @@ class block_contactperson extends block_base {
         $userdata->additionalfieldofaction = null;
         $userdata->emailadditionalfieldofaction = null;
         $userdata->linkadditionalfieldofaction = null;
-        $userdata->userpicturehtml = "<div class='d-inline-block aabtn'><img class='userpicture' width='35' height='35' src='{$url}' alt=''></div>";
+        $userdata->userpicturehtml = "<div class='d-inline-block aabtn'>
+                    <img class='userpicture' width='35' height='35' src='{$url}' alt=''></div>";
         $userdata->contactpersonlink = null;
         $userdata->userid = null;
 
@@ -148,13 +150,11 @@ class block_contactperson extends block_base {
     /**
      * Returns the HTML for a user.
      *
-     * 
      * @param stdClass $userdata The user data.
      *
      * @return string The HTML for a user.
      */
     private function get_html_for_user($userdata) {
-
         $result = "<div class='container d-flex align-items-center contactperson'>" .
             "   <div class='row w-100 pb-3'>" .
             '       <div class="align-self-center">' .
@@ -163,12 +163,16 @@ class block_contactperson extends block_base {
                         <div>' .
             "           <a href='{$userdata->contactpersonlink}' target='_blank'>{$userdata->name}</a>";
 
-        if($userdata->email){
+        if ($userdata->email) {
             $result .= "(<a class='fa fa-envelope-o' href='mailto: {$userdata->email}'></a>)";
         }
 
-        $result .= $this->getActionFieldHtml($userdata->fieldofaction, $userdata->emailfieldofaction, $userdata->linkfieldofaction);
-        $result .= $this->getActionFieldHtml($userdata->additionalfieldofaction, $userdata->emailadditionalfieldofaction, $userdata->linkadditionalfieldofaction);
+        $result .= $this->get_action_field_html($userdata->fieldofaction,
+                                                $userdata->emailfieldofaction,
+                                                $userdata->linkfieldofaction);
+        $result .= $this->get_action_field_html($userdata->additionalfieldofaction,
+                                             $userdata->emailadditionalfieldofaction,
+                                             $userdata->linkadditionalfieldofaction);
 
         $result .=
             '       </div>
@@ -178,8 +182,8 @@ class block_contactperson extends block_base {
         return $result;
     }
 
-    private function getActionFieldHtml($field, $email, $link) {
-        if($field) {
+    private function get_action_field_html($field, $email, $link) {
+        if ($field) {
             return <<<HTML
             <div>
                 <a href='$link'>$field</a>

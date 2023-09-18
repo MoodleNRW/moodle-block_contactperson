@@ -22,17 +22,14 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core\admintree_test;
-
 defined('MOODLE_INTERNAL') || die();
 // Constants which are use throughout this theme.
 define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
 define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
 
-/**
- * Add a setting for a contact person.
- */
-$add_contactperson_configtexts = function($settings, $name, $i, $default = "", $conditionValue = 'yes'){
+
+// Add a setting for a contact person.
+$addcontactpersonconfigtexts = function($settings, $name, $i, $default = "", $conditionvalue = 'yes'){
     $settings->add(new admin_setting_configtext(
         "block_contactperson/$name" . $i,
         get_string($name, 'block_contactperson', array('no' => $i), null, true),
@@ -43,23 +40,20 @@ $add_contactperson_configtexts = function($settings, $name, $i, $default = "", $
         "block_contactperson/$name" . $i,
         "block_contactperson/personenabled" . $i,
         'neq',
-        $conditionValue
+        $conditionvalue
     );
 };
 
-/**
- * Add a setting for a contact person.
- * 
- * @param $settings The settings object.
- * @param $optionspersonenabled The options for the person enabled setting.
- * $add_contactperson_configtexts The function for adding a config text.
- */
-$add_contactperson_settings = function($settings, $optionspersonenabled) use ($add_contactperson_configtexts) {
+// Add a setting for a contact person.
+// @param $settings The settings object.
+// @param $optionspersonenabled The options for the person enabled setting.
+// $add_contactperson_configtexts The function for adding a config text.
+$addcontactpersonsettings = function($settings, $optionspersonenabled) use ($addcontactpersonconfigtexts) {
     $settingkeys = [
-        'name', 
-        'contactpersonlink', 
-        'userid', 
-        'fieldofaction', 
+        'name',
+        'contactpersonlink',
+        'userid',
+        'fieldofaction',
         'linkfieldofaction',
         'emailfieldofaction',
         'additionalfieldofaction',
@@ -84,14 +78,13 @@ $add_contactperson_settings = function($settings, $optionspersonenabled) use ($a
         ));
 
         foreach ($settingkeys as $key) {
-            $add_contactperson_configtexts($settings, $key, $i);
+            $addcontactpersonconfigtexts($settings, $key, $i);
         }
     }
 };
 
 if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
-
         // Option for enabling Contactperson.
         $optionspersonenabled = array(
             BLOCK_CONTACTPERSON_SETTING_SELECT_YES => get_string('yes', 'block_contactperson', array('no' => $i), null, true),
@@ -115,12 +108,13 @@ if ($hassiteconfig) {
         $name = 'block_contactperson/placeholderimage';
         $title = 'Placeholder image';
         $description = 'Placeholder for contacts without a profile picture.';
-        $placeholderimagesetting = new admin_setting_configstoredfile($name, $title, $description, 'placeholderimage', 0, array('maxfiles' => 1, 'accepted_types' => 'web_image'));
+        $placeholderimagesetting = new admin_setting_configstoredfile($name, $title, $description,
+                                 'placeholderimage', 0, array('maxfiles' => 1, 'accepted_types' => 'web_image'));
         $placeholderimagesetting->set_updatedcallback('theme_reset_all_caches');
 
         $settings->add($placeholderimagesetting);
 
-        $add_contactperson_settings($settings, $optionspersonenabled);
+        $addcontactpersonsettings($settings, $optionspersonenabled);
 
         $settings->add(new admin_setting_heading(
             'block_contactperson/contactpersonheaderaccess' ,

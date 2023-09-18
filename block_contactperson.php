@@ -99,6 +99,7 @@ class block_contactperson extends block_base {
                 $userdata->emailfieldofaction = $config->{'emailfieldofaction' . $key};
                 $userdata->linkfieldofaction = $config->{'linkfieldofaction' . $key};
                 $userdata->additionalfieldofaction = $config->{'additionalfieldofaction' . $key};
+                $userdata->emailadditionalfieldofaction = $config->{'emailadditionalfieldofaction' . $key};
                 $userdata->linkadditionalfieldofaction = $config->{'linkadditionalfieldofaction' . $key};
                 $userdata->userid = $config->{'userid' . $key};
 

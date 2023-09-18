@@ -13,12 +13,10 @@
  * @return bool false if the file not found, just send the file otherwise and do not return anything
  */
 function block_contactperson_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()): bool {
-    // TODO: A LOT !!!
-
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
-    // if ($context->contextlevel != CONTEXT_BLOCK) {
-    //     return false;
-    // }
+    if ($context->contextlevel != CONTEXT_BLOCK) {
+        return false;
+    }
 
     // Make sure the filearea is one of those used by the plugin.
     if ($filearea !== 'placeholderimage') {
@@ -26,7 +24,7 @@ function block_contactperson_pluginfile($course, $cm, $context, $filearea, $args
     }
 
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
-    //require_login($course, true, $cm);
+    require_login($course, true, $cm);
 
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
     // if (!has_capability('mod/block_contactperson:view', $context)) {

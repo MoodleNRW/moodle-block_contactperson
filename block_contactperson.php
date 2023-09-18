@@ -69,6 +69,7 @@ class block_contactperson extends block_base {
 
         return $this->content;
     }
+
     /**
      * Returns the HTML for a contact person.
      *
@@ -84,93 +85,90 @@ class block_contactperson extends block_base {
             $config = get_config('block_contactperson');
             $externcontact = $this->get_index_from_config($config, $usedcontactperson);
 
-            $url = block_contactperson_get_url_of_placeholderimage();
-
-            $userpicturehtml = "<img class='d-block w-100' src='{$url}' alt=''>";
-
-            $contactpersonlink = null;
-            $name = null;
-            $email = null;
-            $fieldofaction = null;
-            $emailfieldofaction = null;
-            $linkfieldofaction = null;
-            $additionalfieldofaction = null;
-            $emailadditionalfieldofaction = null;
-            $linkadditionalfieldofaction = null;
-            $userid = null;
-            // $userpicturehtml = "";
+            $userdata = $this->get_prepared_userdata();
 
             if ($externcontact) {
                 // Extrahiere die Zahl am Ende des Schlüssels.
                 $key = substr($externcontact, -1 * (strlen($externcontact) - strlen('name')));
 
                 // Depending on key extract contact information.
-                $contactpersonlink = $config->{'contactpersonlink' . $key};
-                $name = $usedcontactperson;
-                $fieldofaction = $config->{'fieldofaction' . $key};
-                $userid = $config->{'userid' . $key};
-                // $userpicturehtml = "<a href='www.google.com' class='d-inline-block aabtn'><span class='userinitials size-35'>BO</span></a>";
+                $userdata->contactpersonlink = $config->{'contactpersonlink' . $key};
+                $userdata->name = $usedcontactperson;
+                $userdata->fieldofaction = $config->{'fieldofaction' . $key};
+                $userdata->userid = $config->{'userid' . $key};
 
                 // Try to get user picture.
-                $user = core_user::get_user($userid);
+                $user = core_user::get_user($userdata->userid);
                 if ($user) {
-                    $userpicture = $OUTPUT->user_picture($user, ['courseid' => '1']);
-                    $userpicturehtml = $userpicture;
+                    $userdata->userpicturehtml = $OUTPUT->user_picture($user, ['courseid' => '1']);
                 }
-                $htmloutput .= $userid;
+                $htmloutput .= $userdata->userid;
             } else {
                 $user = core_user::get_user($usedcontactperson);
                 if ($user) {
 
-                    $name = $user->firstname . " " . $user->lastname;
-                    $email = $user->email;
-                    $userid = $user->id;
-                    $userpicture = $OUTPUT->user_picture($user, ['courseid' => '1']);
-                    $userpicturehtml = $userpicture;
-                    $htmloutput .= $userid;
+                    $userdata->name = $user->firstname . " " . $user->lastname;
+                    $userdata->email = $user->email;
+                    $userdata->userid = $user->id;
+                    $userdata->userpicturehtml = $OUTPUT->user_picture($user, ['courseid' => '1']);
+                    $htmloutput .=  $userdata->userid;
                 }
             }
 
-            $htmloutput = $this->get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
-                                                    $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
-                                                    $linkadditionalfieldofaction, $userpicturehtml, $contactpersonlink);        }
+            $htmloutput = $this->get_html_for_user($userdata);        
+        }
         return $htmloutput;
+    }
+
+    /**
+     * Returns the prepared user data.
+     *
+     * @return stdClass $userdata The user data.
+     *
+     */
+    private function get_prepared_userdata(){
+        $url = block_contactperson_get_url_of_placeholderimage();
+
+        $userdata = new stdClass();
+        $userdata->name = null;
+        $userdata->email = null;
+        $userdata->fieldofaction = null;
+        $userdata->emailfieldofaction = null;
+        $userdata->linkfieldofaction = null;
+        $userdata->additionalfieldofaction = null;
+        $userdata->emailadditionalfieldofaction = null;
+        $userdata->linkadditionalfieldofaction = null;
+        $userdata->userpicturehtml = "<img class='d-block w-100' src='{$url}' alt=''>";
+        $userdata->contactpersonlink = null;
+        $userdata->userid = null;
+
+        return $userdata;
     }
 
     /**
      * Returns the HTML for a user.
      *
-     * @param string $name The name of the user.
-     * @param string $email The email of the user.
-     * @param string $fieldofaction The field of action of the user.
-     * @param string $emailfieldofaction The email field of action of the user.
-     * @param string $linkfieldofaction The link field of action of the user.
-     * @param string $additionalfieldofaction The additional field of action of the user.
-     * @param string $emailadditionalfieldofaction The email additional field of action of the user.
-     * @param string $linkadditionalfieldofaction The link additional field of action of the user.
-     * @param string $userpicturehtml The user picture HTML.
-     * @param string $contactpersonlink The contact person link.
+     * 
+     * @param stdClass $userdata The user data.
      *
      * @return string The HTML for a user.
      */
-    private function get_html_for_user($name, $email, $fieldofaction, $emailfieldofaction,
-                                        $linkfieldofaction, $additionalfieldofaction, $emailadditionalfieldofaction,
-                                        $linkadditionalfieldofaction, $userpicturehtml, $contactpersonlink) {
+    private function get_html_for_user($userdata) {
 
         $result = "<div class='container d-flex align-items-center contactperson'>" .
             "   <div class='row w-100 pb-3'>" .
             '       <div class="align-self-center">' .
-            $userpicturehtml .
+            $userdata->userpicturehtml .
             '       </div>
                         <div>' .
-            "           <a href='{$contactpersonlink}' target='_blank'>{$name}</a>";
+            "           <a href='{$userdata->contactpersonlink}' target='_blank'>{$userdata->name}</a>";
 
-        if($email){
-            $result .= "(<a class='fa fa-envelope-o' href='mailto: {$email}'></a>)";
+        if($userdata->email){
+            $result .= "(<a class='fa fa-envelope-o' href='mailto: {$userdata->email}'></a>)";
         }
 
-        $result .= $this->getActionFieldHtml($fieldofaction, $emailfieldofaction, $linkfieldofaction);
-        $result .= $this->getActionFieldHtml($additionalfieldofaction, $emailadditionalfieldofaction, $linkadditionalfieldofaction);
+        $result .= $this->getActionFieldHtml($userdata->fieldofaction, $userdata->emailfieldofaction, $userdata->linkfieldofaction);
+        $result .= $this->getActionFieldHtml($userdata->additionalfieldofaction, $userdata->emailadditionalfieldofaction, $userdata->linkadditionalfieldofaction);
 
         $result .=
             '       </div>

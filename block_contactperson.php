@@ -138,7 +138,7 @@ class block_contactperson extends block_base {
         $userdata->additionalfieldofaction = null;
         $userdata->emailadditionalfieldofaction = null;
         $userdata->linkadditionalfieldofaction = null;
-        $userdata->userpicturehtml = "<img class='d-block w-100' src='{$url}' alt=''>";
+        $userdata->userpicturehtml = "<div class='d-inline-block aabtn'><img class='userpicture' width='35' height='35' src='{$url}' alt=''></div>";
         $userdata->contactpersonlink = null;
         $userdata->userid = null;
 

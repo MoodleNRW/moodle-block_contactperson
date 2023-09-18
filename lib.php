@@ -13,11 +13,6 @@
  * @return bool false if the file not found, just send the file otherwise and do not return anything
  */
 function block_contactperson_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()): bool {
-    // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
-    if ($context->contextlevel != CONTEXT_BLOCK) {
-        return false;
-    }
-
     // Make sure the filearea is one of those used by the plugin.
     if ($filearea !== 'placeholderimage') {
         return false;

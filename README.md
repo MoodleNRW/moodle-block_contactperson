@@ -23,14 +23,12 @@ To install the plugin in Moodle via the Moodle User Interface:
 2. Navigate to: `Site administration > Plugins > Install Plugins`
 3. Install plugin from Moodle Plugin directory or via zip upload.
 
-## Usage
-
-
 
 ### Contributor
 
 - Alexander Mikasch
 - Matthias Buttgereit
+- Lena Nedwed
 
 ## License
 

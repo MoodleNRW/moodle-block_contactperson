@@ -248,7 +248,7 @@ class block_contactperson extends block_base {
             'admin' => false,
             'site-index' => true,
             'course-view' => true,
-            'mod' => false,
+            'mod' => true,
             'my' => true,
         );
     }

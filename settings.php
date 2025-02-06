@@ -22,11 +22,17 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-// Constants which are use throughout this theme.
-define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
-define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
+require_once($CFG->libdir . '/adminlib.php');
 
+defined('MOODLE_INTERNAL') || die();
+
+// Konstanten nur einmal definieren - prüfen ob sie bereits existieren
+if (!defined('BLOCK_CONTACTPERSON_SETTING_SELECT_YES')) {
+    define('BLOCK_CONTACTPERSON_SETTING_SELECT_YES', 'yes');
+}
+if (!defined('BLOCK_CONTACTPERSON_SETTING_SELECT_NO')) {
+    define('BLOCK_CONTACTPERSON_SETTING_SELECT_NO', 'no');
+}
 
 // Add a setting for a contact person.
 $addcontactpersonconfigtexts = function($settings, $name, $i, $default = "", $conditionvalue = 'yes'){
@@ -87,8 +93,8 @@ if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
         // Option for enabling Contactperson.
         $optionspersonenabled = array(
-            BLOCK_CONTACTPERSON_SETTING_SELECT_YES => get_string('yes', 'block_contactperson', array('no' => $i), null, true),
-            BLOCK_CONTACTPERSON_SETTING_SELECT_NO => get_string('no', 'block_contactperson', array('no' => $i), null, true)
+            BLOCK_CONTACTPERSON_SETTING_SELECT_YES => get_string('yes', 'block_contactperson', null, null, true),
+            BLOCK_CONTACTPERSON_SETTING_SELECT_NO => get_string('no', 'block_contactperson', null, null, true)
         );
 
         $headingname = 'block_contactperson/contactpersonheadergeneral';
@@ -117,8 +123,8 @@ if ($hassiteconfig) {
         $addcontactpersonsettings($settings, $optionspersonenabled);
 
         $settings->add(new admin_setting_heading(
-            'block_contactperson/contactpersonheaderaccess' ,
-            get_string('addtionalperson', 'block_contactperson', array('no' => $i), null, true),
+            'block_contactperson/contactpersonheaderaccess',
+            get_string('addtionalperson', 'block_contactperson', null, null, true), 
             null
         ));
 
@@ -130,7 +136,7 @@ if ($hassiteconfig) {
 
         $settings->add(new admin_setting_configmultiselect(
             'block_contactperson/accessroles',
-            get_string('accessroles', 'block_contactperson', array('no' => $i), null, true),
+            get_string('accessroles', 'block_contactperson', null, null, true),
             "",
             null,
             $roleoptions
